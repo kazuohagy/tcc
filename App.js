@@ -1,18 +1,25 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View,Image, TextInput, Button } from 'react-native';
-
+import { StyleSheet, Text, View, Image, TextInput, Button } from 'react-native';
+import React, { useState } from 'react';
 
 export default function App() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
       <Image source={require('./assets/gaia.png')} style={styles.Image}></Image>
       <Text style={styles.Label}>GAIA</Text>
-      <TextInput style={styles.Input} placeholder="Email" />
-      <TextInput  style={styles.Input}placeholder="Senha" secureTextEntry />
-      <Button style={styles.mario} title="Entrar" color="#2F4F4F" />
+      <TextInput style={styles.Input} onChangeText={text=>setEmail(text)} placeholder="Email" />
+      <TextInput  style={styles.Input} onChangeText={text=>setPassword(text)} placeholder="Senha" secureTextEntry />
+      <View style={styles.buttonContainer}>
+        <Button title="Entrar" color="#2F4F4F" onPress={() => console.log('Botão Entrar pressionado')} />
+      </View>
       <Text style={styles.Label1}>Não tem uma conta?</Text>
-      <Button style={styles.Button} title="Cadastrar" color="#2F4F4F" />
+      <View style={styles.buttonContainer}>
+        <Button title="Cadastrar" color="#2F4F4F" onPress={() => console.log('Botão Cadastrar pressionado')} />
+      </View>
     </View>
   );
 }
@@ -46,10 +53,13 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor:'#fff',
     width: 300,
+    borderRadius:20
+
   },
-  mario:{
-    margin: 10,
-    color: '#3CB37',
-    padding: 10,
-  }
+  buttonContainer: {
+    marginTop: 20,
+    width: 300,
+    borderRadius: 20,
+    overflow: 'hidden',
+  },
 });
