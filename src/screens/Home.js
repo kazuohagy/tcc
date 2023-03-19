@@ -1,68 +1,76 @@
-import { StyleSheet, Text, View, Image, TextInput, Button } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
-import InputImage from '../components/InputImage';
-export default function Home(props){
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    console.log("Esse e o props")
-    console.log(props)
-    return(
-        <View style={styles.container}>
-        <StatusBar style="auto" />
-        <Image source={require('../assets/irrigacao.png')} style={styles.Image}></Image>
-        
-        <InputImage placeholder="Email" imageName="envelope" onChangeText={text => setEmail(text)} value={email}  />
-        <InputImage placeholder="Senha" imageName="lock" onChangeText={text => setPassword(text)} value={password} secureTextEntry={true} />
+import * as React from 'react';
+import { Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-        <View style={styles.buttonContainer}>
-          <Button title="Entrar" color="#2F4F4F" onPress={() => console.log('Botão Entrar pressionado')} />
-        </View>
-        <Text style={styles.Label1}>Não tem uma conta?</Text>
-        <View style={styles.buttonContainer}>
-          <Button title="Cadastrar" color="#2F4F4F" onPress={()=>props.navigation.navigate('Cadastro')} />
-        </View>
-      </View>
-    )
+function Feed() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Feed!</Text>
+    </View>
+  );
 }
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#3CB371',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    Image:{
-      width: 112,
-      height: 100,
-      borderRadius: 20,
-      marginBottom: 20,
-    },
-    Label:{
-      color: 'white',
-      fontSize: 20,
-      fontWeight: 'bold',
-    },
-    Label1:{
-      color: 'white',
-      fontSize: 10,
-      fontWeight: 'bold',
-      marginTop: 10,
-    },
-    Input: {
-      height: 40,
-      margin: 12,
-      borderWidth: 1,
-      padding: 10,
-      backgroundColor:'#fff',
-      width: 300,
-      borderRadius:20
-  
-    },
-    buttonContainer: {
-      marginTop: 20,
-      width: 300,
-      borderRadius: 20,
-      overflow: 'hidden',
-    },
-  });
+
+function Profile() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Profile!</Text>
+    </View>
+  );
+}
+
+function Notifications() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Notifications!</Text>
+    </View>
+  );
+}
+
+const Tab = createBottomTabNavigator();
+
+export default function Home() {
+  return (
+    <Tab.Navigator
+      initialRouteName="Feed"
+      screenOptions={{
+        tabBarActiveTintColor: '#3CB371',
+      }}
+    >
+      <Tab.Screen
+        name="Feed"
+        component={Feed}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="home" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Notifications"
+        component={Notifications}
+        options={{
+          tabBarLabel: 'Updates',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="bell" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="account" color={color} size={size} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
+
+
+
