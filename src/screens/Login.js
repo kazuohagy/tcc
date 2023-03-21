@@ -6,6 +6,7 @@ export default function Login(props){
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    //remove o voltar do header
     const entrar = () => {
       props.navigation.reset({
         index: 0,
