@@ -1,9 +1,6 @@
-import firebase from "firebase/app";
-import "firebase/firestore";
-import 'firebase/auth';
-import 'firebase/database';
-// TODO: Replace the following with your app's Firebase project configuration
-// See: https://support.google.com/firebase/answer/7015592
+import {initializeApp} from "firebase/app";
+import {getAuth} from "firebase/auth";
+
 const firebaseConfig = {
     apiKey: "AIzaSyCjgPe0vmY7thIgBubGp45BflEzsq98CYA",
     authDomain: "gaia-25c62.firebaseapp.com",
@@ -15,10 +12,6 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
-
-// Initialize Cloud Firestore and get a reference to the service
-const db = firebase.auth();
-
-export default db;
+export const auth = getAuth(app);

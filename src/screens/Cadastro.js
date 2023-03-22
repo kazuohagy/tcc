@@ -2,17 +2,16 @@ import React from 'react';
 import {StyleSheet, Text,Button, View} from 'react-native';
 import InputImage from '../components/InputImage';
 import { useState } from 'react';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../config/firebaseconfig';
 
 export default function Cadastro(props){
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [name, setName] = useState('');
     const [message, setMessage] = useState('');
     const [errorLogin, setErrorLogin] = useState(false);
 
-    const login = () => {
-    const auth = getAuth();
+    const cadastrar = () => {
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
         // Signed in
@@ -33,14 +32,13 @@ export default function Cadastro(props){
     return(
         <View style={styles.container}>
             {errorLogin === true && <Text style={styles.error}>{message}</Text>}
-             <InputImage placeholder="Nome" imageName="user" onChangeText={text => setName(text)} value={name}  />
              <InputImage placeholder="Email" imageName="envelope" onChangeText={text => setEmail(text)} value={email}  />
              <InputImage placeholder="Senha" imageName="lock" onChangeText={text => setPassword(text)} value={password} secureTextEntry={true} />
             <View style={styles.buttonContainer}>
-            <Button title='Cadastrar'color="#2F4F4F" style={styles.byton} onPress={()=>login()}>Cadastrar</Button>
+            <Button title='Cadastrar'color="#2F4F4F" style={styles.byton} onPress={()=>cadastrar()}>Cadastrar</Button>
             </View>
             <View style={styles.buttonContainer}>
-            <Button title='Voltar'color="#2F4F4F" style={styles.byton} onPress={()=>props.navigation.navigate('Home')}>Voltar</Button>
+            <Button title='Voltar'color="#2F4F4F" style={styles.byton} onPress={()=>props.navigation.navigate('Login')}>Voltar</Button>
             </View>
         </View>
     );
