@@ -16,6 +16,7 @@ export default function Cadastro(props){
     .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
+        props.navigation.navigate('Home',{idUser: user.uid})
         console.log("Cadastrado com sucesso")
         console.log(user)
         // ...
