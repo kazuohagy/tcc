@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { Text, View } from 'react-native';
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import db from '../config/firebasedatabase';
 import { useEffect, useState } from 'react';
 import { collection, getDocs } from "firebase/firestore";
+import { StyleSheet } from 'react-native';
 function Feed() {
   const [plants, setPlants] = useState([]);
   
@@ -25,17 +26,72 @@ function Feed() {
   console.log(plants);
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Feed!</Text>
+    <View style={styles.container}>
         {plants.map((plant) => (
-          <View key={plant.id}>
-          <Text>{plant.name}</Text>
+          <View style={styles.caixa} key={plant.id}>
+          <Text style={{color:'#3CB371'}}>{plant.name}</Text>
           <Text>{plant.description}</Text>
           </View>
         ))}
+      <FlatList
+      showsVerticalScrollIndicator={false}
+      data={plants}
+      renderItem={({ item }) => (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.buttonNewPlant}>
+            <Text style={{color:'#3CB371'}}>{item.name}</Text>
+            <Text >{item.description}</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      />
+       <TouchableOpacity>
+          <Text style={styles.iconButton}>Adicionar planta</Text>
+       </TouchableOpacity>
     </View>
   );
 }
+const styles = StyleSheet.create({
+  container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+  },
+  buttonContainer: {
+      marginTop: 20,
+      width: 300,
+      borderRadius: 20,
+      overflow: 'hidden',
+  },
+  iconButton: {
+    color: '#3CB371',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    width: 200,
+    marginTop: 20,
+  },
+  buttonNewPlant: {
+    color: '#3CB371',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    width: '100%',
+    marginTop: 20,
+  },
+  caixa: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    width: '100%',
+    marginTop: 20,
+  }
+});
 
 function Profile() {
   return (
