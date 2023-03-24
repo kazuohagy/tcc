@@ -7,9 +7,15 @@ import db from '../config/firebasedatabase';
 import { useEffect, useState } from 'react';
 import { collection, getDocs } from "firebase/firestore";
 import { StyleSheet } from 'react-native';
-function Feed() {
+function Feed({navigation}) {
   const [plants, setPlants] = useState([]);
-  
+  function deletePlant(id) {
+    db.collection("Plants").doc(id).delete().then(() => {
+      console.log("Document successfully deleted!");
+    }).catch((error) => {
+      console.error("Error removing document: ", error);
+    });
+  }
   useEffect(() => {
     const fetchData = async () => {
       const querySnapshot = await getDocs(collection(db, "Plants"));
@@ -27,25 +33,20 @@ function Feed() {
 
   return (
     <View style={styles.container}>
-        {plants.map((plant) => (
-          <View style={styles.caixa} key={plant.id}>
-          <Text style={{color:'#3CB371'}}>{plant.name}</Text>
-          <Text>{plant.description}</Text>
-          </View>
-        ))}
+
       <FlatList
       showsVerticalScrollIndicator={false}
       data={plants}
       renderItem={({ item }) => (
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.buttonNewPlant}>
+          <TouchableOpacity style={styles.buttonNewPlant} onPress={()=>navigation.navigate("EditPlant")}>
             <Text style={{color:'#3CB371'}}>{item.name}</Text>
             <Text >{item.description}</Text>
           </TouchableOpacity>
         </View>
       )}
       />
-       <TouchableOpacity>
+       <TouchableOpacity onPress={()=>navigation.navigate("NewPlant")}>
           <Text style={styles.iconButton}>Adicionar planta</Text>
        </TouchableOpacity>
     </View>
