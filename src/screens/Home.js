@@ -5,17 +5,19 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import db from "../config/firebasedatabase";
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import { StyleSheet, Image } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/FontAwesome";
+
 function Feed({ navigation }) {
   const [plants, setPlants] = useState([]);
   function deletePlant(id) {
-    db.collection("Plants")
-      .doc(id)
-      .delete()
+    const plantRef = doc(collection(db, "Plants"), id);
+    deleteDoc(plantRef)
       .then(() => {
         console.log("Document successfully deleted!");
+        navigation.navigate("Home");
       })
       .catch((error) => {
         console.error("Error removing document: ", error);
@@ -26,7 +28,7 @@ function Feed({ navigation }) {
       const querySnapshot = await getDocs(collection(db, "Plants"));
       const list = [];
       querySnapshot.forEach((doc) => {
-        console.log(`${doc.id} => ${doc.data()}`);
+        // console.log(`${doc.id} => ${doc.data()}`);
         list.push({ ...doc.data(), id: doc.id });
       });
       setPlants(list);
@@ -39,7 +41,7 @@ function Feed({ navigation }) {
         const querySnapshot = await getDocs(collection(db, "Plants"));
         const list = [];
         querySnapshot.forEach((doc) => {
-          console.log(`${doc.id} => ${doc.data()}`);
+          // console.log(`${doc.id} => ${doc.data()}`);
           list.push({ ...doc.data(), id: doc.id });
         });
         setPlants(list);
@@ -47,8 +49,8 @@ function Feed({ navigation }) {
       fetchData();
     }, [])
   );
-  console.log("ESSAS SAO AS PLANTAS DESGRACA");
-  console.log(plants);
+  // console.log("ESSAS SAO AS PLANTAS DESGRACA");
+  // console.log(plants);
 
   return (
     <View style={styles.container}>
@@ -59,16 +61,26 @@ function Feed({ navigation }) {
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.buttonNewPlant}
+              onPress={() => deletePlant(item.id)}
+            >
+              <Icon name="star" size={18} color="#3CB371" style={styles.Icon} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttonNewPlant}
               onPress={() => navigation.navigate("EditPlant")}
             >
-              <Text style={{ color: "#3CB371" }}>{item.name}</Text>
-              {item.image && (
-                <Image
-                  source={{ uri: item.image }}
-                  style={{ width: 200, height: 200 }}
-                />
-              )}
-              <Text>{item.description}</Text>
+              <View style={styles.row}>
+                {item.image && (
+                  <Image
+                    source={{ uri: item.image }}
+                    style={{ width: 120, height: 120, borderRadius: 10 }}
+                  />
+                )}
+                <View style={styles.content}>
+                  <Text style={{ color: "#3CB371" }}>{item.name}</Text>
+                  <Text>{item.description}</Text>
+                </View>
+              </View>
             </TouchableOpacity>
           </View>
         )}
@@ -113,11 +125,14 @@ const styles = StyleSheet.create({
     width: "100%",
     marginTop: 20,
   },
-  caixa: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    width: "100%",
-    marginTop: 20,
+  row: {
+    flexDirection: "row",
+
+    alignItems: "center",
+  },
+  content: {
+    flex: 1,
+    marginLeft: 10,
   },
 });
 
