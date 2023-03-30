@@ -63,11 +63,23 @@ function Feed({ navigation }) {
               style={styles.buttonNewPlant}
               onPress={() => deletePlant(item.id)}
             >
-              <Icon name="star" size={18} color="#3CB371" style={styles.Icon} />
+              <Icon
+                name="trash"
+                size={18}
+                color="#3CB371"
+                style={styles.Icon}
+              />
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.buttonNewPlant}
-              onPress={() => navigation.navigate("EditPlant")}
+              onPress={() =>
+                navigation.navigate("EditPlant", {
+                  id: item.id,
+                  name: item.name,
+                  description: item.description,
+                  image: item.image,
+                })
+              }
             >
               <View style={styles.row}>
                 {item.image && (
