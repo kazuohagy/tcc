@@ -5,6 +5,7 @@ import Login from "../screens/Login";
 import Cadastro from "../screens/Cadastro";
 import Home from "../screens/Home";
 import NewPlant from "../screens/NewPlant";
+import EditPlant from "../screens/EditPlant";
 
 const Stack = createNativeStackNavigator();
 export default function AppRoutes() {
@@ -21,6 +22,11 @@ export default function AppRoutes() {
         <Stack.Screen
           name="NewPlant"
           component={NewPlant}
+          options={{ headerTintColor: "#3CB371" }}
+        />
+        <Stack.Screen
+          name="EditPlant"
+          component={EditPlant}
           options={{ headerTintColor: "#3CB371" }}
         />
       </Stack.Navigator>
