@@ -2,8 +2,9 @@ import { StyleSheet, Text, View, Image, TextInput, Button } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import InputImage from '../components/InputImage';
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import {auth} from '../config/firebaseconfig';
+import { useEffect } from 'react';
 export default function Login(props){
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -27,6 +28,17 @@ export default function Login(props){
       });
 
     }
+
+    useEffect(()=>{
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          props.navigation.navigate('Home',{idUser: user.uid})
+        }else{
+          console.log("não logado")
+        }
+      
+      })
+    },[])
 
     return(
         <View style={styles.container}>

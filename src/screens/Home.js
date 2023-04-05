@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { Button, FlatList, Text, TouchableOpacity, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -9,6 +9,8 @@ import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import { StyleSheet, Image } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import {auth} from '../config/firebaseconfig';
+import {signOut} from "firebase/auth";
 
 function Feed({ navigation, route }) {
   const [plants, setPlants] = useState([]);
@@ -149,10 +151,25 @@ const styles = StyleSheet.create({
   },
 });
 
-function Profile() {
+function Profile({navigation}) {
+  function logoff() {
+    signOut(auth).then(() => {
+      navigation.navigate('Login');
+    }).catch((error) => {
+      console.log(error)
+    });
+  }
+
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text>Profile!</Text>
+
+      <TouchableOpacity onPress={() => logoff()}>
+        <Text style={styles.iconButton}>
+          Sign Out  <Icon name="sign-out" size={18} color="#3CB371" style={styles.Icon}/>
+        </Text>
+          
+      </TouchableOpacity>
     </View>
   );
 }
