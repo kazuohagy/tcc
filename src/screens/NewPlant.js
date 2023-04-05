@@ -16,7 +16,7 @@ import * as ImagePicker from "expo-image-picker";
 import { storage } from "../config/firebasedatabase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
-export default function NewPlant({ navigation }) {
+export default function NewPlant({ navigation, route }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [message, setMessage] = useState("");
@@ -41,7 +41,7 @@ export default function NewPlant({ navigation }) {
   };
   const addPlant = async () => {
     try {
-      const docRef = await addDoc(collection(db, "Plants"), {
+      const docRef = await addDoc(collection(db, route.params.idUser), {
         name: name,
         description: description,
         image: imageURL,
@@ -128,7 +128,7 @@ export default function NewPlant({ navigation }) {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             console.log("File available at", downloadURL);
             setImageURL(downloadURL);
-            console.log("marioooo", imageURL);
+            // console.log("marioooo", imageURL);
           });
         }
       );
@@ -174,7 +174,7 @@ export default function NewPlant({ navigation }) {
             title="Cadastrar"
             color="#2F4F4F"
             style={styles.byton}
-            onPress={() => addPlant() && navigation.navigate("Home")}
+            onPress={() => addPlant() && navigation.navigate("Home", { idUser: route.params.idUser })}
           >
             Cadastrar
           </Button>
@@ -184,7 +184,7 @@ export default function NewPlant({ navigation }) {
             title="Voltar"
             color="#2F4F4F"
             style={styles.byton}
-            onPress={() => navigation.navigate("Home")}
+            onPress={() => navigation.navigate("Home", { idUser: route.params.idUser })}
           >
             Voltar
           </Button>

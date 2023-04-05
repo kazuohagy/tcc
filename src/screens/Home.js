@@ -10,14 +10,14 @@ import { StyleSheet, Image } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-function Feed({ navigation }) {
+function Feed({ navigation, route }) {
   const [plants, setPlants] = useState([]);
+  console.log("ESSAS SAO AS PLANTAS DESGRACA", route.params.idUser);
   function deletePlant(id) {
-    const plantRef = doc(collection(db, "Plants"), id);
+    const plantRef = doc(collection(db, route.params.idUser), id);
     deleteDoc(plantRef)
       .then(() => {
         console.log("Document successfully deleted!");
-        navigation.navigate("Home");
       })
       .catch((error) => {
         console.error("Error removing document: ", error);
@@ -25,7 +25,7 @@ function Feed({ navigation }) {
   }
   useEffect(() => {
     const fetchData = async () => {
-      const querySnapshot = await getDocs(collection(db, "Plants"));
+      const querySnapshot = await getDocs(collection(db, route.params.idUser));
       const list = [];
       querySnapshot.forEach((doc) => {
         // console.log(`${doc.id} => ${doc.data()}`);
@@ -38,7 +38,7 @@ function Feed({ navigation }) {
   useFocusEffect(
     React.useCallback(() => {
       const fetchData = async () => {
-        const querySnapshot = await getDocs(collection(db, "Plants"));
+        const querySnapshot = await getDocs(collection(db, route.params.idUser));
         const list = [];
         querySnapshot.forEach((doc) => {
           // console.log(`${doc.id} => ${doc.data()}`);
@@ -78,6 +78,7 @@ function Feed({ navigation }) {
                   name: item.name,
                   description: item.description,
                   image: item.image,
+                  idUser: route.params.idUser,
                 })
               }
             >
@@ -97,7 +98,7 @@ function Feed({ navigation }) {
           </View>
         )}
       />
-      <TouchableOpacity onPress={() => navigation.navigate("NewPlant")}>
+      <TouchableOpacity onPress={() => navigation.navigate("NewPlant",{idUser: route.params.idUser})}>
         <Text style={styles.iconButton}>Adicionar planta</Text>
       </TouchableOpacity>
     </View>
@@ -166,7 +167,7 @@ function Notifications() {
 
 const Tab = createBottomTabNavigator();
 
-export default function Home() {
+export default function Home(route) {
   return (
     <Tab.Navigator
       initialRouteName="Feed"
@@ -177,6 +178,7 @@ export default function Home() {
       <Tab.Screen
         name="Feed"
         component={Feed}
+        initialParams={{ idUser: route.route.params.idUser}}
         options={{
           tabBarLabel: "Home",
           headerTintColor: "#3CB371",

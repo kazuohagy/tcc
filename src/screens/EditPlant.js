@@ -43,7 +43,7 @@ export default function NewPlant({ navigation, route }) {
 
   const editPlant = async () => {
     try {
-      const docRef = await updateDoc(doc(db, "Plants", idTask), {
+      const docRef = await updateDoc(doc(db, route.params.idUser, idTask), {
         name: name,
         description: description,
         image: imageURL,
@@ -120,7 +120,7 @@ export default function NewPlant({ navigation, route }) {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             console.log("File available at", downloadURL);
             setImageURL(downloadURL);
-            console.log("marioooo", imageURL);
+            // console.log("marioooo", imageURL);
           });
         }
       );
@@ -166,7 +166,7 @@ export default function NewPlant({ navigation, route }) {
             title="Cadastrar"
             color="#2F4F4F"
             style={styles.byton}
-            onPress={() => editPlant() && navigation.navigate("Home")}
+            onPress={() => editPlant() && navigation.navigate("Home", { idUser: route.params.idUser })}
           >
             Cadastrar
           </Button>
@@ -176,7 +176,7 @@ export default function NewPlant({ navigation, route }) {
             title="Voltar"
             color="#2F4F4F"
             style={styles.byton}
-            onPress={() => navigation.navigate("Home")}
+            onPress={() => navigation.navigate("Home", { idUser: route.params.idUser })}
           >
             Voltar
           </Button>
