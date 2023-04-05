@@ -143,7 +143,13 @@ export default function NewPlant({ navigation, route }) {
     <View style={styles.container}>
       <ScrollView>
         {error === true && <Text style={styles.error}>{message}</Text>}
-
+        {imageURL != "" && (
+          <Image
+            marginTop={10}
+            source={{ uri: imageURL }}
+            style={{ width: "100%", height: 150, borderRadius: 10 }}
+          />
+        )}
         <InputImage
           placeholder="Nome"
           imageName="leaf"
@@ -156,12 +162,7 @@ export default function NewPlant({ navigation, route }) {
           onChangeText={(text) => setDescription(text)}
           value={description}
         />
-        {imageURL != "" && (
-          <Image
-            source={{ uri: imageURL }}
-            style={{ width: 200, height: 200, borderRadius: 100 }}
-          />
-        )}
+
         <View style={styles.buttonContainer}>
           <Button
             title="Escolha uma imagem da galeria"
