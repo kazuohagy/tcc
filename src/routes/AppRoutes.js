@@ -6,6 +6,7 @@ import Cadastro from "../screens/Cadastro";
 import Home from "../screens/Home";
 import NewPlant from "../screens/NewPlant";
 import EditPlant from "../screens/EditPlant";
+import Clima from "../screens/Clima"
 
 const Stack = createNativeStackNavigator();
 export default function AppRoutes() {
@@ -29,6 +30,11 @@ export default function AppRoutes() {
           component={EditPlant}
           options={{ headerTintColor: "#3CB371" }}
         />
+        <Stack.Screen
+          name="Clima"
+          component={Clima}
+          options={{ headerTintColor: "#3CB371" }}
+          />
       </Stack.Navigator>
     </NavigationContainer>
   );
