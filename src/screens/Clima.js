@@ -19,6 +19,7 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Feather } from "@expo/vector-icons";
 import MainCard from "../components/MainCard";
+import InfoCard from "../components/InfoCard";
 
 export default function Clima({ navigation, route }) {
   const [name, setName] = useState(route.params.name);
@@ -80,6 +81,20 @@ export default function Clima({ navigation, route }) {
       flexDirection: "row",
       justifyContent: "space-around",
     },
+    info: {
+      alignItems: "center",
+      backgroundColor: darktheme ? "#393e44" : "#fff",
+      borderRadius: 20,
+      margin: 10,
+      width: "93%",
+      height: 230,
+    },
+    infoText: {
+      color:darktheme ? "#fff" : "#000",
+      fontSize: 20,
+      fontWeight: "bold",
+      
+    }
   });
   console.log(route.params);
 
@@ -145,6 +160,9 @@ export default function Clima({ navigation, route }) {
             temperatura={temperatura}
             icon={3}
           ></MainCard>
+        </View>
+        <View style={styles.info}>
+          <Text style={styles.infoText}>Informacoes adicionais</Text>
         </View>
         <TouchableOpacity
           style={styles.darkMode}
