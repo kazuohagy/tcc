@@ -136,14 +136,14 @@ export default function Clima({ navigation, route }) {
             backgroundColor={darktheme ? "#FFB600" : "#FFD700"}
             dark={darktheme}
             temperatura={temperatura}
-            icon={1}
+            icon={2}
           ></MainCard>
           <MainCard
             title={"Noite"}
             backgroundColor={darktheme ? "#000033" : "#000080"}
             dark={darktheme}
             temperatura={temperatura}
-            icon={1}
+            icon={3}
           ></MainCard>
         </View>
         <TouchableOpacity

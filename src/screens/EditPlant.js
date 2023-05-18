@@ -174,6 +174,20 @@ export default function NewPlant({ navigation, route }) {
         </View>
         <View style={styles.buttonContainer}>
           <Button
+            title="Monitorar"
+            color="#800080"
+            style={[styles.byton, { backgroundColor: 'red' }]} 
+            onPress={() => navigation.navigate("Clima", {                   
+              id: idTask,
+              name: name,
+              description: description,
+              idUser: route.params.idUser, })}
+          >
+            Monitorar
+          </Button>
+        </View>
+        <View style={styles.buttonContainer}>
+          <Button
             title="Voltar"
             color="#2F4F4F"
             style={styles.byton}
@@ -198,5 +212,10 @@ const styles = StyleSheet.create({
     width: 300,
     borderRadius: 20,
     overflow: "hidden",
+    color: "#2F4F4F",
   },
+  buttonText: {
+    color: 'red'
+  },
+
 });
