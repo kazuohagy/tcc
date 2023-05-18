@@ -128,18 +128,21 @@ export default function Clima({ navigation, route }) {
             title={"Manhã"}
             backgroundColor={darktheme ? "#FF8C00" : "#FFA500"}
             dark={darktheme}
+            temperatura={"11"}
             icon={1}
           ></MainCard>
           <MainCard
             title={"Tarde"}
             backgroundColor={darktheme ? "#FFB600" : "#FFD700"}
             dark={darktheme}
+            temperatura={temperatura}
             icon={1}
           ></MainCard>
           <MainCard
             title={"Noite"}
             backgroundColor={darktheme ? "#000033" : "#000080"}
             dark={darktheme}
+            temperatura={temperatura}
             icon={1}
           ></MainCard>
         </View>
