@@ -163,6 +163,10 @@ export default function Clima({ navigation, route }) {
         </View>
         <View style={styles.info}>
           <Text style={styles.infoText}>Informacoes adicionais</Text>
+          <InfoCard title={'Wind'} value={'65km/h'}></InfoCard>
+          <InfoCard title={'Wind'} value={'65km/h'}></InfoCard>
+          <InfoCard title={'Wind'} value={'65km/h'}></InfoCard>
+          <InfoCard title={'Wind'} value={'65km/h'}></InfoCard>
         </View>
         <TouchableOpacity
           style={styles.darkMode}
