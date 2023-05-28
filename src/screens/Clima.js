@@ -18,8 +18,13 @@ import { storage } from "../config/firebasedatabase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Feather } from "@expo/vector-icons";
+
 import MainCard from "../components/MainCard";
+import getCurrentWeather from "../api/ConsultApi";
 import InfoCard from "../components/InfoCard";
+import * as Location from 'expo-location';
+
+
 
 export default function Clima({ navigation, route }) {
   const [name, setName] = useState(route.params.name);
@@ -30,7 +35,7 @@ export default function Clima({ navigation, route }) {
   const [image, setImage] = useState(null);
   const [imageURL, setImageURL] = useState(route.params.image);
   const [darktheme, setDarktheme] = useState(true);
-  const [temperatura, setTemperatura] = useState("");
+  const [currentTemperature, setCurrentTemperature] = useState("");
   const [umidade, setUmidade] = useState("");
   const [luminosidade, setLuminosidade] = useState("");
   const [vento, setVento] = useState("");
@@ -40,6 +45,14 @@ export default function Clima({ navigation, route }) {
   const [pais, setPais] = useState("");
   const [data, setData] = useState("");
   const [horario, setHorario] = useState("");
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const[wind, setWind] = useState("");
+  const[umidity, setUmidity] = useState("");
+  const[tempMin, setTempMin] = useState("");
+  const[tempMax, setTempMax] = useState("");
+  const[imageWeather, setImageWeather] = useState("");
+
 
   // Estilos para o css
   const styles = StyleSheet.create({
@@ -94,23 +107,84 @@ export default function Clima({ navigation, route }) {
       fontSize: 20,
       fontWeight: "bold",
       
-    }
-  });
-  console.log(route.params);
+    },
+    InfoCards:{
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+    },
+    imageContainer: {
+      marginTop: 'auto',
+      marginBottom: 'auto',
+      alignItems: 'center',
+    },
+    image: {
+      width: 50,
+      height: 50,
+    },
 
-  const editPlant = async () => {
-    try {
-      const docRef = await updateDoc(doc(db, route.params.idUser, idTask), {
-        name: name,
-        description: description,
-        image: imageURL,
-      });
-    } catch (e) {
-      console.error("Error adding document: ", e);
-      setError(true);
-      setMessage("Erro ao cadastrar planta");
-    }
+  });
+
+
+  let text = 'Waiting..';
+  // defina uma variavel json vazia
+  let json = {};
+
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
+  }
+  //nao sei por que mas criei um json que na rela esse location provavelmente ja e um json entao nao precisa fazer isso mas como estou cansado vou deixar assim e nao vou arrumar depois :)
+  
+  const showWeatherData = async (json) => {
+    const dados = await getCurrentWeather(json);
+    console.log("AAAAAAAAAAAAA")
+    console.log(dados.weather[0].description);
+    setDescription(dados.weather[0].description);
+    setCurrentTemperature(dados.main.temp);
+    setUmidade(dados.main.humidity);
+    setLuminosidade(dados.main.feels_like);
+    setVento(dados.wind.speed);
+    setPressao(dados.main.pressure);
+    setNuvens(dados.clouds.all);
+    setCidade(dados.name);
+    setPais(dados.sys.country);
+    setData(dados.dt);
+  
+    setWind(dados.wind.speed);
+    setUmidity(dados.main.humidity);
+    setTempMin(dados.main.temp_min);
+    setTempMax(dados.main.temp_max);
+    setImageWeather(dados.weather[0].icon);
+    
+
+    
   };
+  useEffect(() => {
+    (async () => {
+      
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+      showWeatherData(location.coords)
+      hora();
+    })();
+    //arrumar esse coords que ta estragando tudo
+  }, []);
+  function hora(){
+    const offsetInSeconds = -25200;
+    const date = new Date();
+    const offsetInMilliseconds = offsetInSeconds * 1000;
+    const targetTime = new Date(date.getTime() + offsetInMilliseconds);
+    const formattedTime = targetTime.toLocaleTimeString();
+    console.log(formattedTime);
+    setHorario(formattedTime);
+  }
+
 
   return (
     <View style={styles.container}>
@@ -128,45 +202,52 @@ export default function Clima({ navigation, route }) {
             color={darktheme ? "orange" : "black"}
           />
         </TouchableOpacity>
+        <Text></Text>
+        {/* caso queira os dados da localizacao so descomentar a linha abaixo */}
+        {/* <Text style={styles.text}>{text}</Text> */}
+        <Text style={styles.text}>{cidade}</Text>
+        <Text style={styles.text}>{pais}</Text>
+        <Text style={styles.text}>{horario}</Text>
 
-        <Icon
-          style={[{ marginTop: 20, textAlign: "center" }]}
-          name="sun-o"
-          size={30}
-          color="orange"
-        />
-        <Text style={styles.temp}>27 graus</Text>
+
+        <View style={styles.imageContainer}>
+          <Image source = {{uri:`https://openweathermap.org/img/wn/${imageWeather}.png`}} style={styles.image}/>
+        </View>
+
+        <Text style={styles.temp}>{currentTemperature} °C</Text>
         <Text style={styles.text}>{name}</Text>
         <Text style={styles.text}>{description}</Text>
         <View style={styles.cardView}>
           <MainCard
             title={"Manhã"}
-            backgroundColor={darktheme ? "#FF8C00" : "#FFA500"}
+            backgroundColor={darktheme ? "#FFB600" : "#FFD700"}
             dark={darktheme}
-            temperatura={"11"}
+            temperatura={"11" + '°C'}
             icon={1}
           ></MainCard>
           <MainCard
             title={"Tarde"}
-            backgroundColor={darktheme ? "#FFB600" : "#FFD700"}
+            backgroundColor={darktheme ? "#FF8C00" : "#FFA500"}
             dark={darktheme}
-            temperatura={temperatura}
+            temperatura={"10" + '°C'}
             icon={2}
           ></MainCard>
           <MainCard
             title={"Noite"}
             backgroundColor={darktheme ? "#000033" : "#000080"}
             dark={darktheme}
-            temperatura={temperatura}
+            temperatura={"8" + '°C'}
             icon={3}
           ></MainCard>
         </View>
         <View style={styles.info}>
           <Text style={styles.infoText}>Informacoes adicionais</Text>
-          <InfoCard title={'Wind'} value={'65km/h'}></InfoCard>
-          <InfoCard title={'Wind'} value={'65km/h'}></InfoCard>
-          <InfoCard title={'Wind'} value={'65km/h'}></InfoCard>
-          <InfoCard title={'Wind'} value={'65km/h'}></InfoCard>
+          <View style={styles.InfoCards}>
+          <InfoCard title={'Vento'} value={wind + 'km/h'}></InfoCard>
+          <InfoCard title={'Umidade'} value={umidity + '%'}></InfoCard>
+          <InfoCard title={'Temp. Min'} value={tempMin + '°C'}></InfoCard>
+          <InfoCard title={'Temp. Max'} value={tempMax + '°C'}></InfoCard>
+          </View>
         </View>
         <TouchableOpacity
           style={styles.darkMode}
