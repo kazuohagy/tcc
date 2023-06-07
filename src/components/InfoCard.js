@@ -12,7 +12,7 @@ const InfoCard = (props) => {
     },
     cardTitle: {
       fontWeight: "bold",
-      color: "#fff",
+      color: props.dark ? "#fff" : "#000",
  
     },
     ico: {
