@@ -18,7 +18,7 @@ import { storage } from "../config/firebasedatabase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Feather } from "@expo/vector-icons";
-
+import { collection,query, where,getDoc, getDocs} from "firebase/firestore";
 import MainCard from "../components/MainCard";
 import getCurrentWeather from "../api/ConsultApi";
 import InfoCard from "../components/InfoCard";
@@ -28,6 +28,7 @@ import * as Location from 'expo-location';
 
 export default function Clima({ navigation, route }) {
   const [name, setName] = useState(route.params.name);
+  const [plants, setPlants] = useState([]);
   const idTask = route.params.id;
   const [description, setDescription] = useState(route.params.description);
   const [message, setMessage] = useState("");
@@ -52,7 +53,47 @@ export default function Clima({ navigation, route }) {
   const[tempMin, setTempMin] = useState("");
   const[tempMax, setTempMax] = useState("");
   const[imageWeather, setImageWeather] = useState("");
+  console.log("ESSA É A IMAGEM", idTask,route.params.idUser);
 
+  useEffect(() => {
+
+    const fetchData = async () => {
+
+      //pegar pelo firestore somente
+      const querySnapshot = await getDocs(collection(db, route.params.idUser));
+      const list = [];
+      querySnapshot.forEach((doc) => {
+        // console.log(`${doc.id} => ${doc.data()}`);
+        list.push({ ...doc.data(), id: doc.id });
+      });
+        // Filtrar o array de plantas pelo ID desejado
+        const filteredPlants = list.filter((plant) => plant.id === idTask);
+
+        setPlants(filteredPlants);
+    };
+    //inicializar a funcao
+    fetchData();
+    // Configurar o setInterval para chamar a função fetchData a cada 5 segundos
+    const interval = setInterval(fetchData, 5000);
+
+    // Limpar o intervalo quando o componente for desmontado
+    return () => clearInterval(interval);
+  }, []);  
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const querySnapshot = await getDocs(
+  //       query(collection(db, "I3wJ2uIEXVcwCXEJJrsYJss0G872"), where("id", "==", "AeV9HanOSeARgKGjHcoK"))
+  //     );
+  //     const list = [];
+  //     querySnapshot.forEach((doc) => {
+  //       list.push({ ...doc.data(), id: doc.id });
+  //     });
+  //     setPlants(list);
+  //   };
+  //   fetchData();
+  // }, []);
+
+  console.log(plants,"IRRRAAAAAAA")
 
   // Estilos para o css
   const styles = StyleSheet.create({
@@ -100,7 +141,7 @@ export default function Clima({ navigation, route }) {
       borderRadius: 20,
       margin: 10,
       width: "93%",
-      height: 230,
+      height: 310,
     },
     infoText: {
       color:darktheme ? "#fff" : "#000",
@@ -241,13 +282,28 @@ export default function Clima({ navigation, route }) {
           ></MainCard>
         </View>
         <View style={styles.info}>
-          <Text style={styles.infoText}>Informacoes adicionais</Text>
+          <Text style={styles.infoText}>Informações adicionais</Text>
           <View style={styles.InfoCards}>
-          <InfoCard title={'Vento'} value={wind + 'km/h'}></InfoCard>
-          <InfoCard title={'Umidade'} value={umidity + '%'}></InfoCard>
-          <InfoCard title={'Temp. Min'} value={tempMin + '°C'}></InfoCard>
-          <InfoCard title={'Temp. Max'} value={tempMax + '°C'}></InfoCard>
+          <InfoCard dark ={darktheme} title={'Vento'} value={wind + 'km/h'}></InfoCard>
+          <InfoCard dark ={darktheme} title={'Umidade'} value={umidity + '%'}></InfoCard>
+          <InfoCard dark ={darktheme} title={'Temp. Min'} value={tempMin + '°C'}></InfoCard>
+          <InfoCard dark ={darktheme} title={'Temp. Max'} value={tempMax + '°C'}></InfoCard>
           </View>
+          <Text style={styles.infoText}>Informações em tempo real</Text>
+          {/* <Text style={styles.text}>Status da bomba: {plants[0].ligado == true ? "ligado" : "desligado"}</Text>
+          <Text style={styles.text}>Porcentagem de umidade do solo: {plants[0].umidadeSolo}%</Text>
+          <Text style={styles.text}>Quantidade gasta em : {plants[0].qntAgua} ml</Text>
+          <Text style={styles.text}>Quantidade gasta em : {plants[0].qntLitros}L</Text>
+          <Text style={styles.text}>Temperatura da planta: {plants[0].temperatura}°C </Text>
+          <Text style={styles.text}>Tempo em segundos: {plants[0].tempo} s</Text>
+          <Text style={styles.text}>Umidade do ar: {plants[0].umidadeSolo}% </Text> */}
+          <Text style={styles.text}>Status da bomba: {plants.length > 0 ? (plants[0].ligado ? "ligado" : "desligado") : ""}</Text>
+          <Text style={styles.text}>Porcentagem de umidade do solo: {plants.length > 0 ? plants[0].umidadeSolo + "%" : ""}</Text>
+          {/* <Text style={styles.text}>Quantidade gasta em: {plants.length > 0 ? plants[0].qntAgua + " ml" : ""}</Text> */}
+          <Text style={styles.text}>Quantidade gasta em: {plants.length > 0 ? plants[0].qntLitros + "L" : ""}</Text>
+          <Text style={styles.text}>Temperatura do solo: {plants.length > 0 ? plants[0].temperatura + "°C" : ""}</Text>
+          <Text style={styles.text}>Tempo em segundos: {plants.length > 0 ? plants[0].tempo + " s" : ""}</Text>
+          <Text style={styles.text}>Umidade do ar: {plants.length > 0 ? plants[0].umidadeAr + "%" : ""}</Text>
         </View>
         <TouchableOpacity
           style={styles.darkMode}

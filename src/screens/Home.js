@@ -14,7 +14,7 @@ import {signOut} from "firebase/auth";
 
 function Feed({ navigation, route }) {
   const [plants, setPlants] = useState([]);
-  console.log("ESSAS SAO AS PLANTAS DESGRACA", route.params.idUser);
+  //console.log("ESSAS SAO AS PLANTAS DESGRACA", route.params.idUser);
   function deletePlant(id) {
     const plantRef = doc(collection(db, route.params.idUser), id);
     deleteDoc(plantRef)
@@ -51,8 +51,8 @@ function Feed({ navigation, route }) {
       fetchData();
     }, [])
   );
-  // console.log("ESSAS SAO AS PLANTAS DESGRACA");
-  // console.log(plants);
+   console.log("ESSAS SAO AS PLANTAS DESGRACA");
+   console.log(plants);
 
   return (
     <View style={styles.container}>

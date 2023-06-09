@@ -24,7 +24,7 @@ export default function NewPlant({ navigation, route }) {
   const [error, setError] = useState(false);
   const [image, setImage] = useState(null);
   const [imageURL, setImageURL] = useState(route.params.image);
-
+  console.log("AAAAAAAAAA", idTask, route.params.idUser);
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({

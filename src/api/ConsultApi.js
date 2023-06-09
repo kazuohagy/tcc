@@ -6,7 +6,7 @@ export default async function getCurrentWeather(location) {
     try {
       const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${key}&lang=pt_br`);
       const result = await response.json();
-      //  console.log(result);
+       console.log(result);
   
       // Faça algo com o resultado, como retorná-lo ou armazená-lo no estado do componente
   
